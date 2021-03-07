@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
 
 # C extensions
 *.so
@@ -12,20 +12,20 @@ build/
 develop-eggs/
 dist/
 downloads/
-eggs/
-.eggs/
+**/eggs/
+**/.eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+**/pip-wheel-metadata/
+**/share/python-wheels/
+**/*.egg-info/
+**/.installed.cfg
+**/*.egg
+**/MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -76,6 +76,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+**/.ipynb_checkpoints/*
 
 # IPython
 profile_default/
@@ -127,3 +128,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data and data files
+data/
+**/*.csv
+
+# Pycharm
+.idea/
+
