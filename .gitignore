@@ -129,9 +129,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Test notebook
+notebooks/Tests.ipynb
+
 # Data and data files
 data/
 **/*.csv
+**/*.zip
 
 # Pycharm
 .idea/
