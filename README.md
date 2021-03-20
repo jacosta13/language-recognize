@@ -5,6 +5,7 @@
   - [Description](#description)
   - [Data Sources](#data-sources)
 - [Repository Contents](#repository-contents)
+- [Bucket Organization](#bucket-organization)
 
 ## About
 
@@ -19,5 +20,9 @@ The data we are using to train the model is from the following sources:
 
 ## Repository Contents
 The `notebooks` directory contains Jupyter notebooks for data exploration and model development.
+
+## Bucket Organization
+The S3 bucket of the project is organized as follows:
+- `raw-data/` contains the raw data as downloaded from the datasets.
 
 [Back to top.](#language-recognize)
