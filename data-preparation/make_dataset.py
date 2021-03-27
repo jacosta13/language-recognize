@@ -22,7 +22,7 @@ def process_text(text: str, output_filename: str):
     """
     # Replace sequences of many spaces with one space.
     # Also change underscores and parentheses to spaces.
-    text_processed = re.sub(r"[\s_()]+", " ", text)
+    text_processed = re.sub(r"[\s_()]+", " ", unidecode(text))
 
     # Replace question and exclamation marks for periods
     text_processed = re.sub("[!?]", ".", text_processed)
