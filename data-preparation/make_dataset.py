@@ -28,12 +28,12 @@ def process_text(text: str, output_filename: str):
     text_processed = re.sub("[!?]", ".", text_processed)
 
     with open(output_filename, "w") as f:
-        # A rough RE for sentences. . .
+        # An approximate RE for sentences. . .
         for s in re.findall(r"[\w,:;\-\s'%&]+", text_processed):
-
+            stripped = s.strip()
             # Write to file
-            if len(s) > 8:
-                f.write(s + "\n")
+            if len(stripped) > 8:
+                f.write(stripped + "\n")
 
 
 def process_file(
