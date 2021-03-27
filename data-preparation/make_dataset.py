@@ -9,6 +9,7 @@ LANG_FILES = {
     "ted_talks_fr.csv": "French",
     "ted_talks_it.csv": "Italian",
     "ted_talks_pt-br.csv": "Portuguese",
+    "ted_talks_es.csv": "Spanish",
     "ted_talks_tr.csv": "Turkish"
 }
 
