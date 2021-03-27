@@ -20,7 +20,20 @@ def process_text(text: str, output_filename: str):
     :param output_filename: File (.txt) to store the output.
     :return:
     """
-    pass
+    # Replace sequences of many spaces with one space.
+    # Also change underscores and parentheses to spaces.
+    text_processed = re.sub(r"[\s_()]+", " ", text)
+
+    # Replace question and exclamation marks for periods
+    text_processed = re.sub("[!?]", ".", text_processed)
+
+    with open(output_filename, "w") as f:
+        # A rough RE for sentences. . .
+        for s in re.findall(r"[\w,:;\-\s'%&]+", text_processed):
+
+            # Write to file
+            if len(s) > 8:
+                f.write(s + "\n")
 
 
 def process_file(
@@ -38,7 +51,14 @@ def process_file(
     :param output_path: Directory where output will be stored.
     :return: None
     """
-    pass
+    df = pd.read_csv(file_path)
+    lang_dir = os.path.join(output_path, language_name)
+    if not os.path.isdir(lang_dir):
+        os.makedirs(lang_dir)
+
+    for i in df.index:
+        out_file_name = os.path.join(lang_dir, f"text-{i:04d}.txt")
+        process_text(df.loc[i, col_name], out_file_name)
 
 
 def prepare_dataset(
