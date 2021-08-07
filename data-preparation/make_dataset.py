@@ -1,5 +1,6 @@
 import os
 import re
+import numpy as np
 import pandas as pd
 from unidecode import unidecode
 
@@ -13,27 +14,53 @@ LANG_FILES = {
     "ted_talks_tr.csv": "Turkish"
 }
 
+#: Seed for shuffling texts in a file before saving
+RANDOM_SEED: int = 12345
 
-def process_text(text: str, output_filename: str):
+
+def process_text(text: str) -> str:
     """
-    Takes a single text, processes it and saves it by lines in a text file.
+    Processes a given text (removes diacritics, some punctuation and special
+    characters).
     :param text: Text to process (one talk).
-    :param output_filename: File (.txt) to store the output.
     :return:
     """
     # Replace sequences of many spaces with one space.
     # Also change underscores and parentheses to spaces.
-    text_processed = re.sub(r"[\s_()]+", " ", unidecode(text))
+    text_processed = re.sub(r"[\s_()\-,:;%&]+", " ", unidecode(text))
 
     # Replace question and exclamation marks for periods
     text_processed = re.sub("[!?]", ".", text_processed)
+    return text_processed
 
-    with open(output_filename, "w") as f:
-        # An approximate RE for sentences. . .
-        for s in re.findall(r"[\w,:;\-\s'%&]+", text_processed):
-            stripped = s.strip()
-            # Write to file
-            if len(stripped) > 8:
+
+def save_text(
+        text_processed: str,
+        output_dir: str,
+        file_number: int,
+        min_length: int = 64,
+        max_length: int = 128):
+    """
+    Splits a processed text into sentences and saves them in individual text
+    files.
+    :param text_processed:
+    :param output_dir:
+    :param file_number:
+    :param min_length: Minimum sentence length
+    :param max_length: Maximum sentence length
+    :return:
+    """
+    i = 0
+    for s in re.findall(r"[\w\-\s']+", text_processed):
+        stripped = s.strip()
+        # Write to file
+        if max_length >= len(stripped) >= min_length:
+            i += 1
+            fname = os.path.join(
+                output_dir,
+                f"text-{file_number:05d}-{i:04d}.txt"
+            )
+            with open(fname, "w") as f:
                 f.write(stripped + "\n")
 
 
@@ -41,25 +68,50 @@ def process_file(
         file_path: str,
         language_name: str,
         col_name: str = "transcript",
-        output_path: str = os.path.join("data", "processed-text")):
+        train_dir: str = os.path.join("data", "processed-text", "train"),
+        test_dir: str = os.path.join("data", "processed-text", "test"),
+        train_test_ratio: int = 5):
     """
-    Process a csv from the TED talks dataset corrsponding to the dataset for
+    Process a csv from the TED talks dataset corresponding to the dataset for
     one language. Saves the result as text files within a folder with the
     language name. Diacritics are removed using unidecode before saving.
     :param file_path: Path of the file to process.
     :param language_name: Name of the language for output.
     :param col_name: Name of the column that contains the text to process.
-    :param output_path: Directory where output will be stored.
+    :param train_dir: Directory where output (training set) will be stored.
+    :param test_dir: Directory where output (test set) will be stored.
+    :param train_test_ratio: Approx ratio of training texts to test texts
+        (integer).
     :return: None
     """
+    np.random.seed(RANDOM_SEED)
     df = pd.read_csv(file_path)
-    lang_dir = os.path.join(output_path, language_name)
-    if not os.path.isdir(lang_dir):
-        os.makedirs(lang_dir)
 
-    for i in df.index:
-        out_file_name = os.path.join(lang_dir, f"text-{i:04d}.txt")
-        process_text(df.loc[i, col_name], out_file_name)
+    # Create training and test directories for the given language
+    lang_dir_train = os.path.join(train_dir, language_name)
+    if not os.path.isdir(lang_dir_train):
+        os.makedirs(lang_dir_train)
+
+    lang_dir_test = os.path.join(test_dir, language_name)
+    if not os.path.isdir(lang_dir_test):
+        os.makedirs(lang_dir_test)
+
+    # Shuffle texts
+    idx = df.index.values
+    np.random.shuffle(idx)
+
+    # Process and save texts
+    train_count = 0
+    test_count = 0
+    for fnum, i in enumerate(idx, start=1):
+        if fnum % train_test_ratio == 0:
+            test_count += 1
+            processed = process_text(df.loc[i, col_name])
+            save_text(processed, lang_dir_test, test_count)
+        else:
+            train_count += 1
+            processed = process_text(df.loc[i, col_name])
+            save_text(processed, lang_dir_train, train_count)
 
 
 def prepare_dataset(
@@ -70,13 +122,22 @@ def prepare_dataset(
     Prepares the dataset for the model. Output is stored as follows:
 
     output_dir
-      - Language1
-        - Text1.txt
-        - Text2.txt
-        ...
-      - Language2
-        - Text1.txt
-        ...
+        - training
+          - Language1
+            - Text1.txt
+            - Text2.txt
+            ...
+          - Language2
+            - Text1.txt
+            ...
+        - test
+          - Language1
+            - Text1.txt
+            - Text2.txt
+            ...
+          - Language2
+            - Text1.txt
+            ...
 
     This is done to make it compatible with TensorFlow Text Line Dataset.
     :param input_dir: Directory where raw input csv files are stored. Their
@@ -89,8 +150,9 @@ def prepare_dataset(
         raise FileNotFoundError(
             f"Could not find input directory '{input_dir}'"
         )
-    if not os.path.isdir(output_dir):
-        os.makedirs(output_dir)
+    # Train and test directories for output
+    train_dir = os.path.join(output_dir, "train")
+    test_dir = os.path.join(output_dir, "test")
 
     for k, v in LANG_FILES.items():
         full_path = os.path.join(input_dir, k)
@@ -101,7 +163,8 @@ def prepare_dataset(
                 full_path,
                 language_name=v,
                 col_name=col_name,
-                output_path=output_dir
+                train_dir=train_dir,
+                test_dir=test_dir
             )
         else:
             print(f"ERROR: File '{full_path}' not found.")
