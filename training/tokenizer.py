@@ -64,11 +64,14 @@ class CharTokenizer:
 
     DIGITS: List[str] = [str(i) for i in range(10)]
 
+    OTHER_CHAR: List[str] = list(" .,-':?!")
+
     def __init__(self):
-        self.__inverse_mapping = dict(
-            enumerate(self.LETTERS + self.DIGITS + ["[UNK]"], start=1)
-        )
-        self.__mapping = {v: k for k, v in self.__inverse_mapping}
+        self.__inverse_mapping = dict(enumerate(
+            self.LETTERS + self.DIGITS + self.OTHER_CHAR + ["[UNK]"],
+            start=1
+        ))
+        self.__mapping = {v: k for k, v in self.__inverse_mapping.items()}
         self.__unk_token = self.__mapping["[UNK]"]
 
     @property
