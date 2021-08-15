@@ -20,7 +20,9 @@ The data we are using to train the model is from the following sources:
 - [TED Talks Dataset](https://www.kaggle.com/miguelcorraljr/ted-ultimate-dataset)
 
 ## Repository Contents
-The `notebooks` directory contains Jupyter notebooks for data exploration and model development.
+- The `notebooks` directory contains Jupyter notebooks for data exploration and model development. 
+- The `data-preparation` directory contains scripts and utilities to prepare the dataset for
+  the models.
 
 ## Bucket Organization
 The S3 bucket of the project is organized as follows:
