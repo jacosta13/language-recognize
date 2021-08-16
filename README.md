@@ -7,6 +7,8 @@
 - [Repository Contents](#repository-contents)
 - [Bucket Organization](#bucket-organization)
 - [Data Processing](#data-preprocessing)
+- [API](#api)
+  - [Run Server Locally](#run-server-locally)
 
 ## About
 
@@ -23,6 +25,7 @@ The data we are using to train the model is from the following sources:
 - The `notebooks` directory contains Jupyter notebooks for data exploration and model development. 
 - The `data-preparation` directory contains scripts and utilities to prepare the dataset for
   the models.
+- The `service` directory contains the code for running and deploying the model as an HTTP API.
 
 ## Bucket Organization
 The S3 bucket of the project is organized as follows:
@@ -50,5 +53,16 @@ python data-preparation/make_dataset.py --input_dir=data/raw-data/ted-dataset
 You can pass the following optional arguments as well:
 - `--output_dir=<directory to store output>`
 - `--col_name=<name of column with text in the csvs>`
+
+## API
+
+### Run Server Locally
+To run the model server locally, go to the `service/server` directory and start the
+server with 
+```shell
+uvicorn main:app
+```
+Then you can consult the model via `HTTP` requests. The documentation url for the API is
+`/docs`.
 
 [Back to top.](#language-recognize)
