@@ -17,7 +17,7 @@ def normalize_text(text: str) -> str:
     return clean[:MAX_TEXT_LEN]
 
 
-def str_to_ascii_codes(text: str, pad_length: int = MAX_TEXT_LEN) -> List[int]:
+def str_to_codes(text: str, pad_length: int = MAX_TEXT_LEN) -> List[int]:
     """
     Converts a given string to the list of integer Unicode codes of the
     characters.
