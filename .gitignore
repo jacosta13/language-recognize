@@ -140,3 +140,5 @@ data/
 # Pycharm
 .idea/
 
+# TFLite models
+**/*.tflite
