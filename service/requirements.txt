@@ -11,3 +11,4 @@ termcolor==1.1.0
 typing-extensions==3.10.0.0
 Unidecode==1.2.0
 uvicorn==0.15.0
+https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp38-cp38-linux_x86_64.whl
