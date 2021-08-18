@@ -57,8 +57,9 @@ You can pass the following optional arguments as well:
 ## API
 
 ### Run Server Locally
-To run the model server locally, go to the `service/server` directory and start the
-server with 
+To run the model server locally, first ensure you have saved the prediction model in
+[tflite format](https://www.tensorflow.org/lite/guide) in `service/server/assets/model.tflite`,
+and then go to the `service/server` directory and start the server with:
 ```shell
 uvicorn main:app
 ```
