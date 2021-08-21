@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Language Recognition</title>
+    <style>
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/redoc">Documentation (Redoc)</a></li>
+    </ul>
+</nav>
+
+<h1>Language Recognition</h1>
+<div>
+    <h2>Instructions</h2>
+    <p>
+        Write a short text in one of these currently supported languages, press
+        the submit button and the model will attempt to identify the language!
+    </p>
+    <h3>Supported Languages:</h3>
+    <ul>
+        {% for lang in languages %}
+        <li>{{ lang }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/api/v1/identify", method="post">
+        <label for="input_text">Enter Text</label>
+        <input type="text" name="input_text" id="input_text">
+        <button type="submit">Consult Model</button>
+    </form>
+    {% if model_result %}
+    <p>
+        The text is written in {{ model_result.lang_name }} with a probability of
+        {{ model_result.confidence }} %, according to the model.
+    </p>
+    {% endif %}
+</div>
+
+</body>
+</html>
