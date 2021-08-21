@@ -51,24 +51,34 @@ def identify_form(request: Request):
 
 
 @router.post("/identify", response_class=HTMLResponse)
-async def identify_form_model(request: Request, input_text: str = Form(...)):
+async def identify_form_model(request: Request, input_text: str = Form("")):
     """
-    Another endpoint to serve the model, this time when called from the HTML
-    form.
-    :return:
+    Another endpoint to serve the model, when called from the HTML form.
     """
     handler = handlers.LangRecModelHandler()
-    model_response = handler.identify_lang(input_text)
+    template_vars = {
+        "request": request,
+        "languages": handler.LANGUAGES,
+    }
 
-    temp = templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "languages": handler.LANGUAGES,
-            "model_result": {
-                "language": model_response["language"],
-                "confidence": 100 * round(model_response["confidence"], 2)
-            }
+    try:
+        model_response = handler.identify_lang(input_text)
+        template_vars["model_result"] = {
+            "language": model_response["language"],
+            "confidence": 100 * round(model_response["confidence"], 2)
         }
-    )
+
+    except InputValidationErr as e:
+        template_vars["error_msg"] = {
+            "type": "Input Validation",
+            "message": str(e)
+        }
+
+    except Exception as e:
+        template_vars["error_msg"] = {
+            "type": "Other",
+            "message": str(e)
+        }
+
+    temp = templates.TemplateResponse("index.html", template_vars)
     return temp
