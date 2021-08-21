@@ -2,8 +2,14 @@ Parameters:
   DockerImage:
     Type: String
     Description: "Docker image of the language recognize service. Must be in your ECR repo."
+  SubnetID:
+    Type: String
+    Description: "ID of subnet in which to deploy"
 
 Resources:
+  ###############################################
+  # Cluster
+  ###############################################
   FargateCluster:
     Type: "AWS::EC2::Cluster"
     Properties:
@@ -19,12 +25,16 @@ Resources:
         - Key: Description
           Value: "Cluster to run the language recognize on docker with AWS Fargate"
 
+  ###############################################
+  # Task Definition
+  ###############################################
   LangRecTask:
     Type: "AWS::ECS::TaskDefinition"
     Properties:
       Cpu: 256
       Memory: 512
       Family: LanguageRecognize
+      NetworkMode: awsvpc
       Tags:
         - Key: Name
           Value: LangRecTask
@@ -34,7 +44,44 @@ Resources:
         - Name: LangRecContainer
           PortMappings:
             - HostPort: 80
-              ContainerPort: 3000
+              ContainerPort: 80
           Image: !Ref DockerImage
+
+  ###############################################
+  # Service Definition
+  ###############################################
+  LangRecService:
+    Type: "AWS::ECS::Service"
+    Properties:
+      Cluster: !Ref FargateCluster
+      LaunchType: FARGATE
+      ServiceName: LanguageRecognizeService
+      TaskDefinition: !Ref LangRecTask
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref LRSecurityGroup
+          Subnets:
+            - !Ref SubnetID
+
+  ###############################################
+  # Networking (VPC)
+  ###############################################
+  LRSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Allow HTTP Access"
+      GroupName: LRSecurityGroup
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "80"
+          ToPort: "80"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: LRSecurityGroup
+
 
 
