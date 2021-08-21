@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse, HTMLResponse
 
@@ -18,7 +18,6 @@ async def identify_lang(req: RecognizeRequest) -> JSONResponse:
     """
     try:
         text = req.text
-        print("[TEXT]:", text)
         handler = handlers.LangRecModelHandler()
         out = handler.identify_lang(text)
         return JSONResponse(out, status_code=200)
@@ -52,5 +51,24 @@ def identify_form(request: Request):
 
 
 @router.post("/identify", response_class=HTMLResponse)
-async def identify_form_model():
-    pass
+async def identify_form_model(request: Request, input_text: str = Form(...)):
+    """
+    Another endpoint to serve the model, this time when called from the HTML
+    form.
+    :return:
+    """
+    handler = handlers.LangRecModelHandler()
+    model_response = handler.identify_lang(input_text)
+
+    temp = templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "languages": handler.LANGUAGES,
+            "model_result": {
+                "language": model_response["language"],
+                "confidence": 100 * round(model_response["confidence"], 2)
+            }
+        }
+    )
+    return temp
