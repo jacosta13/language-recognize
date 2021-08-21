@@ -13,7 +13,7 @@ pytz==2021.1
 six==1.15.0
 starlette==0.14.2
 termcolor==1.1.0
-tflite-runtime @ https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp38-cp38-linux_x86_64.whl
+https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp37-cp37m-linux_x86_64.whl
 typing-extensions==3.10.0.0
 Unidecode==1.2.0
 uvicorn==0.15.0
