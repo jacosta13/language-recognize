@@ -10,6 +10,7 @@
 - [API](#api)
   - [Run Server Locally](#run-server-locally)
   - [Run with Docker](#run-with-docker)
+- [Deploy to AWS Fargate](#deploy-to-aws-fargate)
 
 ## About
 
@@ -78,7 +79,23 @@ docker build -t language-recognize .
 ```
 Then you can start the service with
 ```shell
-docker run --name lang-recognize-container -p 3000:3000 language-recognize
+docker run --name lang-recognize-container -p 3000:80 language-recognize
+```
+
+## Deploy to AWS Fargate
+In order to deploy the service to an AWS Fargate container, follow these steps: First, you must
+set up an AWS ECR repository for your docker images. Then, build and push the docker image of the service
+to the repository (you can follow the instructions
+[here](https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-push.html)).
+
+Once you have done this, navigate to the `service/aws-infrastructure` directory, copy the `.env.example`
+file to a `.env` file, and fill in the values with the image URI from ECS and the ID of the subnet
+you want to deploy to (this can be a subnet in your default VPC).
+
+Finally, you can run the `build.sh` script to launch the stack. When you're done playing around with
+it, you can take down the service from AWS by running the following:
+```shell
+aws cloudformation delete-stack --stack-name language-recognize-stack
 ```
 
 [Back to top.](#language-recognize)
