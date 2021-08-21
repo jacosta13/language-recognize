@@ -9,6 +9,7 @@
 - [Data Processing](#data-preprocessing)
 - [API](#api)
   - [Run Server Locally](#run-server-locally)
+  - [Run with Docker](#run-with-docker)
 
 ## About
 
