@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Language Recognition</title>
     <style>
+        .input-textfield {
+            height: 40px;
+            width: 320px;
+            padding-left: 10px;
+        }
+
+        .form-button {
+            height: 40px;
+        }
     </style>
 </head>
 <body>
@@ -28,9 +37,13 @@
         {% endfor %}
     </ul>
     <form action="/api/v1/identify", method="post">
-        <label for="input_text">Enter Text</label>
-        <input type="text" name="input_text" id="input_text">
-        <button type="submit">Consult Model</button>
+        <label for="input_text"><b>Enter Text Here: </b></label><br>
+        <input
+                type="text"
+                name="input_text"
+                id="input_text"
+                class="input-textfield">
+        <button type="submit" class="form-button">Consult Model</button>
     </form>
     {% if model_result %}
     <p>
