@@ -69,13 +69,13 @@ async def identify_form_model(request: Request, input_text: str = Form("")):
         }
 
     except InputValidationErr as e:
-        template_vars["error"] = {
+        template_vars["error_msg"] = {
             "type": "Input Validation",
             "message": str(e)
         }
 
     except Exception as e:
-        template_vars["error"] = {
+        template_vars["error_msg"] = {
             "type": "Other",
             "message": str(e)
         }

@@ -13,6 +13,10 @@
         .form-button {
             height: 40px;
         }
+
+        .error-par {
+            color: crimson;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +49,13 @@
                 class="input-textfield">
         <button type="submit" class="form-button">Consult Model</button>
     </form>
-    {% if model_result %}
+    {% if error_msg %}
+    <p class="error-par">
+        The model failed to run! <br>
+        The type of error is {{ error_msg.type }} <br>
+        The message is: {{ error_msg.message }}
+    </p>
+    {% elif model_result %}
     <p>
         The text is written in {{ model_result.language }} with a probability of
         {{ model_result.confidence }} %, according to the model.
