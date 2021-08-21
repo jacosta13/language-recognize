@@ -1,0 +1,19 @@
+Parameters:
+  DockerImage:
+    Type: String
+    Description: "Docker image of the language recognize service. Must be in your ECR repo."
+
+Resources:
+  FargateCluster:
+    Type: "AWS::EC2::Cluster"
+    Properties:
+      ClusterName: LanguageRecognizeCluster
+      CapacityProviders:
+        - FARGATE_SPOT
+      Tags:
+        - Key: Name
+          Value: LanguageRecognizeCluster
+        - Key: Description
+          Value: "Cluster to run the language recognize on docker with AWS Fargate"
+
+
