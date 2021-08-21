@@ -10,10 +10,31 @@ Resources:
       ClusterName: LanguageRecognizeCluster
       CapacityProviders:
         - FARGATE_SPOT
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: FARGATE_SPOT
+          Weight: 1
       Tags:
         - Key: Name
           Value: LanguageRecognizeCluster
         - Key: Description
           Value: "Cluster to run the language recognize on docker with AWS Fargate"
+
+  LangRecTask:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Cpu: 256
+      Memory: 512
+      Family: LanguageRecognize
+      Tags:
+        - Key: Name
+          Value: LangRecTask
+        - Key: Description
+          Value: "Task definition to run the language recognize service in containers"
+      ContainerDefinitions:
+        - Name: LangRecContainer
+          PortMappings:
+            - HostPort: 80
+              ContainerPort: 3000
+          Image: !Ref DockerImage
 
 
