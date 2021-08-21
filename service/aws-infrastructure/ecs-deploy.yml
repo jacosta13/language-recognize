@@ -11,7 +11,7 @@ Resources:
   # Cluster
   ###############################################
   FargateCluster:
-    Type: "AWS::EC2::Cluster"
+    Type: "AWS::ECS::Cluster"
     Properties:
       ClusterName: LanguageRecognizeCluster
       CapacityProviders:
@@ -35,6 +35,9 @@ Resources:
       Memory: 512
       Family: LanguageRecognize
       NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
       Tags:
         - Key: Name
           Value: LangRecTask
@@ -62,7 +65,7 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !Ref LRSecurityGroup
+            - !GetAtt LRSecurityGroup.GroupId
           Subnets:
             - !Ref SubnetID
 
@@ -83,5 +86,35 @@ Resources:
         - Key: Name
           Value: LRSecurityGroup
 
-
+  ###############################################
+  # IAM Task Execution Role
+  ###############################################
+  TaskExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "ECSTaskExecRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: ECRAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ecr:GetAuthorizationToken"
+                  - "ecr:BatchCheckLayerAvailability"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:BatchGetImage"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource:
+                  - "*"
 
