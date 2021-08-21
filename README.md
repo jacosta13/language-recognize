@@ -9,6 +9,7 @@
 - [Data Processing](#data-preprocessing)
 - [API](#api)
   - [Run Server Locally](#run-server-locally)
+  - [Run with Docker](#run-with-docker)
 
 ## About
 
@@ -57,7 +58,10 @@ You can pass the following optional arguments as well:
 ## API
 
 ### Run Server Locally
-To run the model server locally, first ensure you have saved the prediction model in
+To run the model server locally, first install the required dependencies from `service/src/requirements.txt`.
+If your python version is *different* from 3.7, you must install the appropriate version of 
+`tflite_runtime` from [here](https://github.com/google-coral/pycoral/releases/tag/v2.0.0).
+Next, ensure you have saved the prediction model in
 [tflite format](https://www.tensorflow.org/lite/guide) in `service/src/assets/model.tflite`,
 and then go to the `service/src` directory and start the server with:
 ```shell
@@ -65,5 +69,16 @@ uvicorn main:app
 ```
 Then you can consult the model via `HTTP` requests. The documentation url for the API is
 `/docs`.
+
+### Run with Docker
+In order to run the service with docker, first navigate to the `service` directory and build
+the image with
+```shell
+docker build -t language-recognize .
+```
+Then you can start the service with
+```shell
+docker run --name lang-recognize-container -p 3000:3000 language-recognize
+```
 
 [Back to top.](#language-recognize)
