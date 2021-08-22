@@ -44,7 +44,8 @@ def identify_form(request: Request):
         "index.html",
         {
             "languages": handlers.LangRecModelHandler.LANGUAGES,
-            "request": request
+            "request": request,
+            "text_val": ""
         }
     )
     return temp
@@ -59,6 +60,7 @@ async def identify_form_model(request: Request, input_text: str = Form("")):
     template_vars = {
         "request": request,
         "languages": handler.LANGUAGES,
+        "text_val": input_text
     }
 
     try:
