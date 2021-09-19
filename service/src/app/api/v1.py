@@ -67,7 +67,7 @@ async def identify_form_model(request: Request, input_text: str = Form("")):
         model_response = handler.identify_lang(input_text)
         template_vars["model_result"] = {
             "language": model_response["language"],
-            "confidence": 100 * round(model_response["confidence"], 2)
+            "confidence": "%.2f" % (100 * model_response["confidence"])
         }
 
     except InputValidationErr as e:
