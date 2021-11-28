@@ -13,7 +13,7 @@ resource "aws_iam_role" "task_exec" {
   })
   tags = {
     Name    = "lang-rec-task-exec"
-    Project = "language-recognize"
+    Project = var.project
   }
 }
 
