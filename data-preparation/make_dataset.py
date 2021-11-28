@@ -51,14 +51,12 @@ def save_text(
     :param max_length: Maximum sentence length
     :return:
     """
-    i = 0
-    for s in re.findall(r"[\w\-\s']+", text_processed):
-        stripped = s.strip()
-        # Write to file
-        if max_length >= len(stripped) >= min_length:
-            i += 1
-            fpath = output_dir / f"text-{file_number:05d}-{i:04d}.txt"
-            with fpath.open("w") as f:
+    fpath = output_dir / f"text-{file_number:05d}.txt"
+    with fpath.open("w") as f:
+        for s in re.findall(r"[\w\-\s']+", text_processed):
+            stripped = s.strip()
+            # Write to file
+            if max_length >= len(stripped) >= min_length:
                 f.write(stripped + "\n")
 
 
