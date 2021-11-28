@@ -142,3 +142,6 @@ data/
 
 # TFLite models
 **/*.tflite
+
+# Terraform
+**/.terraform/
