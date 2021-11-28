@@ -145,7 +145,7 @@ def prepare_dataset(
     :return: None
     """
     input_dir = Path(input_dir)
-    if input_dir.is_dir():
+    if not input_dir.is_dir():
         raise FileNotFoundError(
             f"Could not find input directory '{str(input_dir)}'"
         )
