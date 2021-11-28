@@ -8,3 +8,9 @@ variable "project" {
   description = "Name of the project resources are associated to."
   default     = "language-recognize"
 }
+
+variable "img_tag" {
+  type        = string
+  description = "Tag of docker image to pull from ECR."
+  default     = "latest"
+}
