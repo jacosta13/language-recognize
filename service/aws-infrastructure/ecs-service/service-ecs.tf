@@ -19,8 +19,24 @@ resource "aws_ecs_task_definition" "langrec_def" {
     }
   ])
   tags = {
-    Name        = "language-recognize"
+    Name        = var.project
     Description = "Task definition for language recognize service."
     Project     = var.project
+  }
+}
+
+resource "aws_ecs_service" "language_recognize" {
+  name            = "${var.project}-service"
+  cluster         = aws_ecs_cluster.language_recognize.arn
+  task_definition = aws_ecs_task_definition.langrec_def.arn
+  desired_count   = "1"
+  network_configuration {
+    subnets          = [var.subnet_id]
+    assign_public_ip = true
+    security_groups  = [aws_security_group.http_access.id]
+  }
+  tags = {
+    Name    = var.project
+    Project = var.project
   }
 }

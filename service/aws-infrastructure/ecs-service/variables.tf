@@ -14,3 +14,8 @@ variable "img_tag" {
   description = "Tag of docker image to pull from ECR."
   default     = "latest"
 }
+
+variable "subnet_id" {
+  type        = string
+  description = "ID of the subnet where the service will run."
+}
