@@ -8,5 +8,6 @@ resource "aws_ecr_repository" "language_recognize" {
   tags = {
     Name        = "language-recognize"
     Description = "Repository for Language Recognize service Docker images"
+    Project     = "language-recognize"
   }
 }

@@ -8,5 +8,6 @@ resource "aws_ecs_cluster" "language_recognize" {
   tags = {
     Name        = "language-recognize-cluster"
     Description = "Cluster to run the Language Recognition service on Fargate"
+    Project     = "language-recognize"
   }
 }
