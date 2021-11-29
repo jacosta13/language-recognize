@@ -40,7 +40,7 @@ jobs:
       - name: Deploy ECR Repo
         run: |
           cd service/aws-infrastructure/ecr-repo
-          terraform apply -auto-approve
+          terraform apply -auto-approve -input=false
 
       - name: Download TFLite Model
         run: |
@@ -49,14 +49,14 @@ jobs:
           aws s3 cp s3://${{ env.S3_BUCKET }}/models/service/model.tflite assets/model.tflite
 
       - name: Package and Upload Image
-        uses: kciter/aws-ecr-action@master
+        uses: appleboy/docker-ecr-action@master
         with:
-          access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
-          secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          access_key: ${{ env.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           region: "us-west-2"
-          create_repo: false
-          path: ./service/
-          account_id: ${{ env.AWS_ACCOUNT }}
+          context: ./service/
+          dockerfile: ./service/Dockerfile
+          registry: ${{ env.AWS_ACCOUNT }}.dkr.ecr.us-west-2.amazonaws.com
           repo: language-recognize
           tags: "latest,v${{ github.run_id }}"
 
@@ -86,4 +86,7 @@ jobs:
       - name: Apply Resource
         run: |
           cd service/aws-infrastructure/ecs-service
-          terraform apply -auto-approve -var-file="../config/variables.tfvars"
+          terraform apply -auto-approve \
+                          -var-file="../config/variables.tfvars" \
+                          -var="language_recognize_bucket=$S3_BUCKET" \
+                          -input=false

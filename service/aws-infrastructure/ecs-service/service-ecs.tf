@@ -12,8 +12,8 @@ resource "aws_ecs_task_definition" "langrec_def" {
       image = "${data.terraform_remote_state.ecr_data.outputs.ecr_url}:${var.img_tag}"
       portMappings = [
         {
-          hostPort      = "80"
-          containerPort = "80"
+          hostPort      = 80
+          containerPort = 80
         }
       ]
     }
