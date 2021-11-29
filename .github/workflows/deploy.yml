@@ -86,4 +86,4 @@ jobs:
       - name: Apply Resource
         run: |
           cd service/aws-infrastructure/ecs-service
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var-file="../config/variables.tfvars"
