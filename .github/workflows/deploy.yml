@@ -40,7 +40,7 @@ jobs:
       - name: Deploy ECR Repo
         run: |
           cd service/aws-infrastructure/ecr-repo
-          terraform apply -auto-approve
+          terraform apply -auto-approve -input=false
 
       - name: Download TFLite Model
         run: |
@@ -88,4 +88,5 @@ jobs:
           cd service/aws-infrastructure/ecs-service
           terraform apply -auto-approve \
                           -var-file="../config/variables.tfvars" \
-                          -var="language_recognize_bucket=$S3_BUCKET"
+                          -var="language_recognize_bucket=$S3_BUCKET" \
+                          -input=false

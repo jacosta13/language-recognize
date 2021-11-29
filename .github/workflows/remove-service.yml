@@ -27,7 +27,7 @@ jobs:
       - name: Destroy ECS Service
         run: |
           cd service/aws-infrastructure/ecs-service
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve -input=false
 
       - name: Init ECR
         run: |
@@ -37,4 +37,4 @@ jobs:
       - name: Destroy ECR
         run: |
           cd service/aws-infrastructure/ecr-repo
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve -input=false
