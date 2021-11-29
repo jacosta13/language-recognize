@@ -49,7 +49,7 @@ jobs:
           aws s3 cp s3://${{ env.S3_BUCKET }}/models/service/model.tflite assets/model.tflite
 
       - name: Package and Upload Image
-        uses: kciter/aws-ecr-action@master
+        uses: kciter/aws-ecr-action@v3
         with:
           access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
