@@ -49,14 +49,14 @@ jobs:
           aws s3 cp s3://${{ env.S3_BUCKET }}/models/service/model.tflite assets/model.tflite
 
       - name: Package and Upload Image
-        uses: kciter/aws-ecr-action@v3
+        uses: appleboy/docker-ecr-action@master
         with:
-          access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
-          secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          access_key: ${{ env.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           region: "us-west-2"
-          create_repo: false
-          path: ./service/
-          account_id: ${{ env.AWS_ACCOUNT }}
+          context: ./service/
+          dockerfile: ./service/Dockerfile
+          registry: ${{ env.AWS_ACCOUNT }}.dkr.ecr.us-west-2.amazonaws.com
           repo: language-recognize
           tags: "latest,v${{ github.run_id }}"
 
