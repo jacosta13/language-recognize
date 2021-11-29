@@ -27,7 +27,10 @@ jobs:
       - name: Destroy ECS Service
         run: |
           cd service/aws-infrastructure/ecs-service
-          terraform destroy -auto-approve -input=false
+          terraform destroy -auto-approve \
+                            -input=false \
+                            -var="language_recognize_bucket=$S3_BUCKET" \
+                            -var-file="../config/variables.tfvars"
 
       - name: Init ECR
         run: |
