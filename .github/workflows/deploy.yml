@@ -55,7 +55,7 @@ jobs:
           secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           region: "us-west-2"
           create_repo: false
-          path: service/
+          path: ./service/
           account_id: ${{ env.AWS_ACCOUNT }}
           repo: language-recognize
           tags: "latest,v${{ github.run_id }}"
